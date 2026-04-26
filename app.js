@@ -43,34 +43,34 @@ function switchTab(tabId, el) {
 function render() {
     const days = ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"];
     const now = new Date();
-    let displayDayIdx = now.getDay();
+    let displayIdx = now.getDay();
+    if (displayIdx === 0) displayIdx = 1; // Если ВС, показываем ПН
 
-    // 1. Умный выходной (если воскресенье — показываем завтра)
-    if (displayDayIdx === 0) displayDayIdx = 1;
-
-    const todayName = days[displayDayIdx];
+    const todayName = days[displayIdx];
+    
+    // Обновляем плашку недели
     const badge = document.getElementById('week-type-display');
-    badge.innerText = currentWeekView === 'num' ? 'Числитель (нечетная)' : 'Знаменатель (четная)';
-    badge.onclick = () => { currentWeekView = (currentWeekView === 'num' ? 'den' : 'num'); render(); };
+    if(badge) {
+        badge.innerText = currentWeekView === 'num' ? 'Числитель (нечет)' : 'Знаменатель (чет)';
+        badge.onclick = () => { currentWeekView = (currentWeekView === 'num' ? 'den' : 'num'); render(); };
+    }
 
-    document.getElementById('current-day-name').innerText = (now.getDay() === 0) ? "Завтра: Пн" : todayName;
+    document.getElementById('current-day-name').innerText = (now.getDay() === 0) ? "Завтра: Понедельник" : todayName;
 
-    // Вкладка СЕГОДНЯ
-    const list = document.getElementById('today-list');
-    list.innerHTML = "";
+    // Список на сегодня
+    const todayList = document.getElementById('today-list');
+    todayList.innerHTML = "";
     const lessons = schedule.filter(s => s.day === todayName && (s.week === "both" || s.week === currentWeekView));
-
+    
     lessons.forEach(l => {
-        const timer = getTimerStatus(l.time);
-        list.innerHTML += `<div class="card ${timer.active ? 'active-lesson' : ''}">
-            <div class="lesson-time">🕒 ${l.time}</div>
-            <div class="lesson-subject">${l.subject}</div>
-            <div class="lesson-room">📍 ${l.room}</div>
-            ${timer.html}
+        todayList.innerHTML += `<div class="card">
+            <div style="color:var(--accent); font-weight:700; font-size:14px;">🕒 ${l.time}</div>
+            <div style="font-size:18px; font-weight:600; margin:5px 0;">${l.subject}</div>
+            <div style="opacity:0.6; font-size:14px;">📍 ${l.room}</div>
         </div>`;
     });
 
-    // Вкладка НЕДЕЛЯ
+    // Вкладка вся неделя
     const weekList = document.getElementById('full-schedule');
     weekList.innerHTML = "";
     ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница"].forEach(d => {
@@ -78,33 +78,14 @@ function render() {
         if(dayLessons.length > 0) {
             weekList.innerHTML += `<h3 style="margin:20px 0 10px 5px; opacity:0.5; font-size:14px;">${d}</h3>`;
             dayLessons.forEach((l, idx) => {
-                const isCorrectWeek = (l.week === "both" || l.week === currentWeekView);
-                weekList.innerHTML += `<div class="card" style="opacity: ${isCorrectWeek ? 1 : 0.4}">
-                    <div style="font-size:12px; margin-bottom:4px;">${l.week==='num'?'[Чис]':l.week==='den'?'[Знам]':''} ${l.time}</div>
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <b>${l.subject}</b>
-                        <span onclick="deleteLesson(${idx})" style="color:#f38ba8; font-size:20px;">×</span>
-                    </div>
+                const active = (l.week === "both" || l.week === currentWeekView);
+                weekList.innerHTML += `<div class="card" style="opacity:${active ? 1 : 0.3}">
+                    <div style="font-size:12px;">${l.time}</div>
+                    <b>${l.subject}</b>
                 </div>`;
             });
         }
     });
-}
-
-function getTimerStatus(timeString) {
-    try {
-        const now = new Date();
-        const [startStr, endStr] = timeString.split('-');
-        const [sH, sM] = startStr.trim().split(':');
-        const [eH, eM] = endStr.trim().split(':');
-        const s = new Date(); s.setHours(sH, sM, 0);
-        const e = new Date(); e.setHours(eH, eM, 0);
-        if (now >= s && now <= e) {
-            const m = Math.floor((e - now) / 60000);
-            return { active: true, html: `<div style="margin-top:10px; color:#f9e2af; font-size:12px; font-weight:bold;">⏳ Осталось ${m} мин.</div>` };
-        }
-    } catch(e) {}
-    return { active: false, html: "" };
 }
 
 function addLesson() {
@@ -115,28 +96,21 @@ function addLesson() {
         time: document.getElementById('time').value,
         room: document.getElementById('room').value
     };
-    if(!l.subject || !l.time) return alert("Заполни поля");
     schedule.push(l);
     localStorage.setItem("schedule", JSON.stringify(schedule));
     render();
 }
 
-function deleteLesson(i) {
-    if(confirm("Удалить пару?")) {
-        schedule.splice(i, 1);
-        localStorage.setItem("schedule", JSON.stringify(schedule));
-        render();
-    }
-}
-
 function resetToDefault() {
-    if(confirm("Вернуть расписание со скриншотов?")) {
+    if(confirm("Сбросить?")) {
         schedule = defaultSchedule;
         localStorage.setItem("schedule", JSON.stringify(schedule));
         render();
     }
 }
 
-if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js');
-setInterval(render, 60000);
+// Регистрация SW
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js');
+}
 render();
