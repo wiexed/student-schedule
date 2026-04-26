@@ -1,39 +1,16 @@
-const CACHE = "schedule-v3"; // Меняй версию здесь для обновления у всех
-const ASSETS = [
-  "./",
-  "./index.html",
-  "./style.css",
-  "./app.js",
-  "./manifest.json"
-];
+const CACHE_NAME = "schedule-v4"; // Увеличивай число при обновлении!
+const ASSETS = ["./", "./index.html", "./style.css", "./app.js", "./manifest.json"];
 
-// Установка: сохраняем файлы в кэш
-self.addEventListener("install", (event) => {
-  event.waitUntil(
-    caches.open(CACHE).then((cache) => cache.addAll(ASSETS)).then(() => self.skipWaiting())
-  );
+self.addEventListener("install", (e) => {
+    e.waitUntil(caches.open(CACHE_NAME).then((c) => c.addAll(ASSETS)));
 });
 
-// Активация: удаляем СТАРЫЕ версии кэша
-self.addEventListener("activate", (event) => {
-  event.waitUntil(
-    caches.keys().then(keys => Promise.all(
-      keys.map(key => {
-        if (key !== CACHE) return caches.delete(key);
-      })
-    )).then(() => self.clients.claim())
-  );
+self.addEventListener("activate", (e) => {
+    e.waitUntil(caches.keys().then((keys) => Promise.all(
+        keys.map((k) => k !== CACHE_NAME && caches.delete(k))
+    )));
 });
 
-// Запрос: сначала кэш, если нет — сеть
-self.addEventListener("fetch", (event) => {
-  event.respondWith(
-    caches.match(event.request).then((cached) => {
-      return cached || fetch(event.request).then((res) => {
-        const copy = res.clone();
-        caches.open(CACHE).then((cache) => cache.put(event.request, copy));
-        return res;
-      });
-    })
-  );
+self.addEventListener("fetch", (e) => {
+    e.respondWith(caches.match(e.request).then((res) => res || fetch(e.request)));
 });

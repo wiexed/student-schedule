@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Расписание PRO</title>
+    <title>Расписание СДП</title>
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -15,7 +15,7 @@
     <section id="tab-today" class="tab-content active">
         <header>
             <h1 id="current-day-name">Сегодня</h1>
-            <p id="week-type-display" class="week-badge">Числитель</p>
+            <div id="week-type-display" class="week-badge">Загрузка...</div>
         </header>
         <div id="today-list" class="lessons-container"></div>
     </section>
@@ -26,9 +26,10 @@
     </section>
 
     <section id="tab-settings" class="tab-content">
-        <header><h1>Управление</h1></header>
-        <div class="card add-card">
-            <input id="subject" placeholder="Предмет">
+        <header><h1>Настройки</h1></header>
+        <div class="card">
+            <h3>Добавить пару</h3>
+            <input id="subject" placeholder="Название предмета">
             <select id="day">
                 <option value="Понедельник">Понедельник</option>
                 <option value="Вторник">Вторник</option>
@@ -38,24 +39,25 @@
             </select>
             <select id="week-type">
                 <option value="both">Каждая неделя</option>
-                <option value="num">Числитель (нечет)</option>
-                <option value="den">Знаменатель (чет)</option>
+                <option value="num">Числитель (нечетная)</option>
+                <option value="den">Знаменатель (четная)</option>
             </select>
-            <input id="time" placeholder="08:30-10:00">
+            <input id="time" placeholder="Время (напр. 08:30-09:55)">
             <input id="room" placeholder="Аудитория">
-            <button onclick="addLesson()">Добавить пару</button>
+            <button onclick="addLesson()" style="margin-top:10px;">Добавить</button>
         </div>
+        <button onclick="resetToDefault()" style="background:rgba(255,255,255,0.1); color:white; margin-top:20px;">Сбросить расписание</button>
     </section>
 
     <nav class="tab-bar">
         <div class="tab-item active" onclick="switchTab('tab-today', this)">
-            <span>📅</span><label>Сегодня</label>
+            <span class="icon">📅</span><label>Сегодня</label>
         </div>
         <div class="tab-item" onclick="switchTab('tab-week', this)">
-            <span>🗓</span><label>Неделя</label>
+            <span class="icon">🗓</span><label>Неделя</label>
         </div>
         <div class="tab-item" onclick="switchTab('tab-settings', this)">
-            <span>⚙️</span><label>Настройки</label>
+            <span class="icon">⚙️</span><label>Настройки</label>
         </div>
     </nav>
 

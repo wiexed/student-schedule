@@ -1,6 +1,6 @@
 ﻿:root {
     --bg: #0f0f14;
-    --card-bg: rgba(255, 255, 255, 0.06);
+    --card-bg: rgba(255, 255, 255, 0.07);
     --accent: #74c7ec;
     --text: #ffffff;
 }
@@ -10,45 +10,52 @@ body {
     background-color: var(--bg);
     color: var(--text);
     margin: 0;
-    padding: env(safe-area-inset-top) 20px 100px 20px; /* Отступ снизу под меню */
-    overflow-x: hidden;
+    padding: calc(20px + env(safe-area-inset-top)) 20px calc(100px + env(safe-area-inset-bottom)) 20px;
+    box-sizing: border-box;
+    min-height: 100vh;
 }
 
 header {
     margin-bottom: 25px;
-    padding-top: 20px;
 }
 
 h1 {
     font-size: 28px;
     margin: 0;
+    font-weight: 800;
 }
 
 .week-badge {
     display: inline-block;
     background: var(--accent);
     color: #111;
-    padding: 4px 12px;
+    padding: 6px 14px;
     border-radius: 20px;
-    font-size: 12px;
-    font-weight: bold;
-    margin-top: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    margin-top: 10px;
+    cursor: pointer;
+    transition: 0.2s;
 }
 
-/* Скрытие вкладок */
+    .week-badge:active {
+        transform: scale(0.95);
+        opacity: 0.8;
+    }
+
 .tab-content {
     display: none;
-    animation: fadeIn 0.3s ease;
 }
 
     .tab-content.active {
         display: block;
+        animation: slideUp 0.3s ease-out;
     }
 
-@keyframes fadeIn {
+@keyframes slideUp {
     from {
         opacity: 0;
-        transform: translateY(10px);
+        transform: translateY(15px);
     }
 
     to {
@@ -57,45 +64,53 @@ h1 {
     }
 }
 
-/* Карточки */
 .card {
     background: var(--card-bg);
-    backdrop-filter: blur(10px);
-    border-radius: 20px;
-    padding: 16px;
+    backdrop-filter: blur(15px);
+    border-radius: 22px;
+    padding: 18px;
     margin-bottom: 15px;
     border: 1px solid rgba(255,255,255,0.08);
+    position: relative;
+}
+
+.active-lesson {
+    border: 2px solid var(--accent);
+    background: rgba(116, 199, 236, 0.12);
 }
 
 .lesson-time {
     color: var(--accent);
-    font-weight: 600;
+    font-weight: 700;
     font-size: 14px;
+    margin-bottom: 4px;
 }
 
 .lesson-subject {
-    font-size: 18px;
-    margin: 5px 0;
-    font-weight: 500;
+    font-size: 19px;
+    font-weight: 600;
+    line-height: 1.2;
 }
 
 .lesson-room {
     opacity: 0.6;
     font-size: 14px;
+    margin-top: 6px;
 }
 
-/* Нижнее меню */
+/* Навигация */
 .tab-bar {
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
-    background: rgba(20, 20, 25, 0.8);
-    backdrop-filter: blur(20px);
+    background: rgba(15, 15, 20, 0.85);
+    backdrop-filter: blur(25px);
     display: flex;
     justify-content: space-around;
-    padding: 10px 0 calc(10px + env(safe-area-inset-bottom)) 0;
+    padding: 12px 0 calc(12px + env(safe-area-inset-bottom)) 0;
     border-top: 1px solid rgba(255,255,255,0.1);
+    z-index: 1000;
 }
 
 .tab-item {
@@ -111,22 +126,36 @@ h1 {
         color: var(--accent);
     }
 
-    .tab-item span {
-        font-size: 20px;
+    .tab-item .icon {
+        font-size: 22px;
     }
 
     .tab-item label {
         font-size: 11px;
         margin-top: 4px;
+        font-weight: 500;
     }
 
-/* Поля ввода в настройках */
+/* Формы */
 input, select {
     width: 100%;
-    background: rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.1);
     border: none;
-    padding: 12px;
-    margin-bottom: 10px;
-    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 12px;
+    border-radius: 14px;
     color: white;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+button {
+    width: 100%;
+    border: none;
+    padding: 16px;
+    border-radius: 14px;
+    font-weight: 700;
+    color: #111;
+    background: var(--accent);
+    font-size: 16px;
 }
