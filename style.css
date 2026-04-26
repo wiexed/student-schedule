@@ -32,6 +32,13 @@ h2 {
     position: relative;
 }
 
+/* Подсветка текущей пары */
+.active-lesson {
+    border: 2px solid #f9e2af !important;
+    background: rgba(249, 226, 175, 0.15) !important;
+    box-shadow: 0 0 15px rgba(249, 226, 175, 0.2);
+}
+
 input, select {
     width: 100%;
     background: rgba(255, 255, 255, 0.1);
