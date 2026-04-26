@@ -15,7 +15,9 @@
     <section id="tab-today" class="tab-content active">
         <header>
             <h1 id="current-day-name">Сегодня</h1>
-            <div id="week-type-display" class="week-badge">Загрузка...</div>
+            <div id="week-selector" class="week-toggle">
+                <span id="week-type-display">Загрузка...</span>
+            </div>
         </header>
         <div id="today-list" class="lessons-container"></div>
     </section>
@@ -42,11 +44,11 @@
                 <option value="num">Числитель (нечетная)</option>
                 <option value="den">Знаменатель (четная)</option>
             </select>
-            <input id="time" placeholder="08:30-09:55">
+            <input id="time" placeholder="Время (напр. 08:30-09:55)">
             <input id="room" placeholder="Аудитория">
             <button onclick="addLesson()">Добавить</button>
         </div>
-        <button onclick="resetToDefault()" style="background:rgba(255,255,255,0.1); color:white; margin-top:20px; border-radius:14px; padding:10px;">Сбросить расписание</button>
+        <button onclick="resetToDefault()" class="reset-btn">Сбросить всё</button>
     </section>
 
     <nav class="tab-bar">

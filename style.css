@@ -25,17 +25,28 @@ h1 {
     font-weight: 800;
 }
 
-.week-badge {
-    display: inline-block;
-    background: var(--accent);
-    color: #111;
-    padding: 6px 14px;
-    border-radius: 20px;
-    font-size: 13px;
-    font-weight: 700;
-    margin-top: 10px;
+/* Новая кнопка переключателя */
+.week-toggle {
+    display: inline-flex;
+    align-items: center;
+    background: var(--card-bg);
+    padding: 8px 16px;
+    border-radius: 12px;
+    margin-top: 12px;
+    border: 1px solid var(--accent);
     cursor: pointer;
+    transition: 0.2s;
 }
+
+    .week-toggle span {
+        color: var(--accent);
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+    .week-toggle:active {
+        transform: scale(0.95);
+    }
 
 .tab-content {
     display: none;
@@ -43,7 +54,7 @@ h1 {
 
     .tab-content.active {
         display: block;
-        animation: fadeIn 0.3s ease;
+        animation: fadeIn 0.2s ease;
     }
 
 @keyframes fadeIn {
@@ -59,10 +70,10 @@ h1 {
 .card {
     background: var(--card-bg);
     backdrop-filter: blur(15px);
-    border-radius: 22px;
+    border-radius: 20px;
     padding: 18px;
-    margin-bottom: 15px;
-    border: 1px solid rgba(255,255,255,0.08);
+    margin-bottom: 12px;
+    border: 1px solid rgba(255,255,255,0.05);
 }
 
 .tab-bar {
@@ -76,7 +87,6 @@ h1 {
     justify-content: space-around;
     padding: 12px 0 calc(12px + env(safe-area-inset-bottom)) 0;
     border-top: 1px solid rgba(255,255,255,0.1);
-    z-index: 1000;
 }
 
 .tab-item {
@@ -105,7 +115,7 @@ input, select, button {
     width: 100%;
     padding: 14px;
     margin-bottom: 10px;
-    border-radius: 14px;
+    border-radius: 12px;
     border: none;
     font-size: 16px;
 }
@@ -119,4 +129,10 @@ button {
     background: var(--accent);
     color: #111;
     font-weight: 700;
+}
+
+.reset-btn {
+    background: rgba(255,255,255,0.05);
+    color: #ff8181;
+    margin-top: 20px;
 }
