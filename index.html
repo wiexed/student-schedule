@@ -2,45 +2,21 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Расписание СДП</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Расписание СДП-ИИПС-251</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="manifest" href="manifest.json">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
 </head>
 <body>
-
-    <section id="tab-today" class="tab-content active">
+    <div class="app-container">
         <header>
-            <h1 id="today-title">Сегодня</h1>
-            <p id="today-date-info" style="opacity:0.5; font-size:14px; margin-top:5px;"></p>
+            <button id="prevWeek">&lt;</button>
+            <h2 id="weekRange">Загрузка...</h2>
+            <button id="nextWeek">&gt;</button>
         </header>
-        <div id="today-list" class="container"></div>
-    </section>
 
-    <section id="tab-week" class="tab-content">
-        <header>
-            <div class="week-nav">
-                <button onclick="changeWeek(-1)">❮</button>
-                <div style="text-align:center">
-                    <h2 id="week-range" style="font-size:16px; margin:0;">Загрузка...</h2>
-                    <span id="week-type-label" style="font-size:12px; color:var(--accent);">Подгруппа 3.1</span>
-                </div>
-                <button onclick="changeWeek(1)">❯</button>
-            </div>
-        </header>
-        <div id="week-list" class="container"></div>
-    </section>
-
-    <nav class="tab-bar">
-        <div class="tab-item active" onclick="switchTab('tab-today', this)">
-            <span>🏠</span><label>Сегодня</label>
-        </div>
-        <div class="tab-item" onclick="switchTab('tab-week', this)">
-            <span>🗓</span><label>Неделя</label>
-        </div>
-    </nav>
-
+        <main id="scheduleDisplay">
+        </main>
+    </div>
     <script src="app.js"></script>
 </body>
 </html>
