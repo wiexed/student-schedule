@@ -43,6 +43,15 @@ h2 {
     background: rgba(249, 226, 175, 0.15) !important;
 }
 
+#today-section {
+    cursor: pointer;
+}
+
+    #today-section p {
+        text-align: center;
+        font-weight: bold;
+    }
+
 input, select {
     width: 100%;
     background: rgba(255, 255, 255, 0.1);
