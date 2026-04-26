@@ -169,3 +169,90 @@ const calendarData = {
     "2026-06-08": [], "2026-06-09": [], "2026-06-10": [],
     "2026-06-11": [], "2026-06-12": [], "2026-06-13": []
 };
+
+let currentOffset = 0;
+
+function getISODate(date) {
+    let y = date.getFullYear();
+    let m = String(date.getMonth() + 1).padStart(2, '0');
+    let d = String(date.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+}
+
+function renderCard(l) {
+    let typeClass = "ind-prak"; 
+    if (l.type.includes("Лек")) typeClass = "ind-lek"; 
+    if (l.type.includes("Лаб")) typeClass = "ind-lab"; 
+    if (l.type.includes("Обяз")) typeClass = ""; 
+
+    return `
+        <div class="lesson-card">
+            <div class="indicator ${typeClass}"></div>
+            <div class="card-content">
+                <div class="card-top"><span>${l.time}</span><span class="room">${l.room}</span></div>
+                <div class="subject">${l.subject}</div>
+                <div class="type-tag">${l.type}</div>
+            </div>
+        </div>`;
+}
+
+function renderToday() {
+    let now = new Date();
+    if (now.getDay() === 0) {
+        now.setDate(now.getDate() + 1);
+        document.getElementById('today-title').innerText = "Завтра (Пн)";
+    } else {
+        document.getElementById('today-title').innerText = "Сегодня";
+    }
+    
+    const dateStr = getISODate(now);
+    const list = document.getElementById('today-list');
+    list.innerHTML = "";
+    
+    document.getElementById('today-date-info').innerText = now.toLocaleDateString('ru', {day:'numeric', month:'long'});
+
+    const lessons = calendarData[dateStr] || [];
+    if (lessons.length === 0) {
+        list.innerHTML = "<p style='text-align:center; opacity:0.3; margin-top:50px;'>Пар нет</p>";
+    } else {
+        lessons.forEach(l => list.innerHTML += renderCard(l));
+    }
+}
+
+function renderWeek() {
+    let d = new Date();
+    d.setDate(d.getDate() - (d.getDay() === 0 ? 6 : d.getDay() - 1) + (currentOffset * 7));
+    
+    let start = new Date(d);
+    let end = new Date(d); end.setDate(d.getDate() + 6);
+    
+    document.getElementById('week-range').innerText = `${start.getDate()} ${start.toLocaleString('ru', {month:'short'})} — ${end.getDate()} ${end.toLocaleString('ru', {month:'short'})}`;
+    
+    const list = document.getElementById('week-list');
+    list.innerHTML = "";
+    const daysNames = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб"];
+
+    for (let i = 0; i < 6; i++) {
+        let currentDay = new Date(start);
+        currentDay.setDate(start.getDate() + i);
+        const dateStr = getISODate(currentDay);
+        const lessons = calendarData[dateStr] || [];
+
+        if (lessons.length > 0) {
+            list.innerHTML += `<div style="margin:15px 0 10px 5px; font-size:12px; opacity:0.5; font-weight:800; text-transform:uppercase;">${daysNames[i]} (${currentDay.getDate()} ${currentDay.toLocaleString('ru', {month:'short'})})</div>`;
+            lessons.forEach(l => list.innerHTML += renderCard(l));
+        }
+    }
+}
+
+function switchTab(id, el) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-item').forEach(i => i.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    el.classList.add('active');
+    if (id === 'tab-today') { currentOffset = 0; renderToday(); } else { renderWeek(); }
+}
+
+function changeWeek(dir) { currentOffset += dir; renderWeek(); }
+
+window.onload = () => { renderToday(); };
