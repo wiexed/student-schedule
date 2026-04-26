@@ -1,42 +1,66 @@
-const schedule = [
-    // ПОНЕДЕЛЬНИК
-    { day: 1, week: "both", subject: "Инженерная графика", type: "Прак", time: "08:30 — 09:55", room: "307" },
-    { day: 1, week: "both", subject: "Тестирование ПО", type: "Прак", time: "10:05 — 11:30", room: "206" },
-    { day: 1, week: "both", subject: "Физика", type: "Лек", time: "11:40 — 13:05", room: "315" },
-    { day: 1, week: "both", subject: "Математика", type: "Прак", time: "13:30 — 14:55", room: "219" },
-    { day: 1, week: "both", subject: "Физра", type: "Прак", time: "15:05 — 16:30", room: "с/з" },
-    
-    // ВТОРНИК
-    { day: 2, week: "both", subject: "Иностранный язык", type: "Прак", time: "08:30 — 09:55", room: "312" },
-    { day: 2, week: "num", subject: "Физика", type: "Прак", time: "10:05 — 11:30", room: "213" },
-    { day: 2, week: "both", subject: "Математика", type: "Лек", time: "11:40 — 13:05", room: "221" },
-    { day: 2, week: "both", subject: "История бел. гос-ти", type: "Лек", time: "13:30 — 14:55", room: "312" },
+// Расписание, разбитое по конкретным датам (ГГГГ-ММ-ДД)
+// Добавил всё, что было на твоих скринах
+const calendarData = {
+    // НЕДЕЛЯ 1 (Текущая)
+    "2026-04-27": [
+        { subject: "Инженерная графика", type: "Прак", time: "08:30 — 09:55", room: "307" },
+        { subject: "Тестирование ПО", type: "Прак", time: "10:05 — 11:30", room: "206" },
+        { subject: "Физика", type: "Лек", time: "11:40 — 13:05", room: "315" },
+        { subject: "Математика", type: "Прак", time: "13:30 — 14:55", room: "219" },
+        { subject: "Физическая культура", type: "Прак", time: "15:05 — 16:30", room: "с/з" }
+    ],
+    "2026-04-28": [
+        { subject: "Иностранный язык", type: "Прак", time: "08:30 — 09:55", room: "312" },
+        { subject: "Физика", type: "Прак", time: "10:05 — 11:30", room: "213" },
+        { subject: "Математика", type: "Лек", time: "11:40 — 13:05", room: "221" },
+        { subject: "История бел. гос-ти", type: "Лек", time: "13:30 — 14:55", room: "312" }
+    ],
+    "2026-04-29": [
+        { subject: "Тестирование ПО", type: "Лек", time: "08:30 — 09:55", room: "315" },
+        { subject: "Математика", type: "Прак", time: "10:05 — 11:30", room: "218" },
+        { subject: "Физ. основы измерений", type: "Прак", time: "11:40 — 13:05", room: "305" },
+        { subject: "Физическая культура", type: "Прак", time: "13:30 — 14:55", room: "с/з" }
+    ],
+    "2026-04-30": [
+        { subject: "Физ. основы измерений", type: "Прак", time: "08:30 — 09:55", room: "305" },
+        { subject: "Физика", type: "Прак", time: "10:05 — 11:30", room: "218" },
+        { subject: "Физика", type: "Лек", time: "11:40 — 13:05", room: "221" },
+        { subject: "Информ. час", type: "Обяз", time: "13:15 — 14:15", room: "307" }
+    ],
+    "2026-05-01": [
+        { subject: "Основы права", type: "Лек", time: "08:30 — 09:55", room: "221" },
+        { subject: "Физическая культура", type: "Прак", time: "10:05 — 11:30", room: "с/з" }
+    ],
 
-    // СРЕДА
-    { day: 3, week: "both", subject: "Тестирование ПО", type: "Лек", time: "08:30 — 09:55", room: "315" },
-    { day: 3, week: "both", subject: "Математика", type: "Прак", time: "10:05 — 11:30", room: "218" },
-    { day: 3, week: "both", subject: "Физ. основы измерений", type: "Прак", time: "11:40 — 13:05", room: "305" },
-    { day: 3, week: "both", subject: "Физра", type: "Прак", time: "13:30 — 14:55", room: "с/з" }
-];
+    // НЕДЕЛЯ 2 (Изменения: Основы права Прак вместо Лек и т.д.)
+    "2026-05-04": [
+        { subject: "Инженерная графика", type: "Прак", time: "08:30 — 09:55", room: "307" },
+        { subject: "Тестирование ПО", type: "Прак", time: "10:05 — 11:30", room: "206" },
+        { subject: "Физика", type: "Лек", time: "11:40 — 13:05", room: "315" },
+        { subject: "Математика", type: "Прак", time: "13:30 — 14:55", room: "219" },
+        { subject: "Физическая культура", type: "Прак", time: "15:05 — 16:30", room: "с/з" }
+    ],
+    "2026-05-08": [
+        { subject: "Физическая культура", type: "Прак", time: "10:05 — 11:30", room: "с/з" },
+        { subject: "Основы права", type: "Прак", time: "11:40 — 13:05", room: "312" }
+    ]
+};
 
-let weekOffset = 0;
+let currentOffset = 0;
 
-function getWeekInfo(offset) {
-    let d = new Date();
-    d.setDate(d.getDate() - (d.getDay() === 0 ? 6 : d.getDay() - 1) + (offset * 7));
-    let start = new Date(d);
-    let end = new Date(d); end.setDate(d.getDate() + 6);
-    
-    const weekNum = Math.ceil((((d - new Date(d.getFullYear(), 0, 1)) / 86400000) + 1) / 7);
-    return {
-        range: `${start.getDate()} ${start.toLocaleString('ru', {month:'short'})} — ${end.getDate()} ${end.toLocaleString('ru', {month:'short'})}`,
-        type: weekNum % 2 === 0 ? "den" : "num",
-        label: weekNum % 2 === 0 ? "Знаменатель" : "Числитель"
-    };
+function getISODate(date) {
+    let y = date.getFullYear();
+    let m = String(date.getMonth() + 1).padStart(2, '0');
+    let d = String(date.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
 }
 
 function renderCard(l) {
-    const typeClass = l.type === "Лек" ? "ind-lek" : (l.type === "Лаб" ? "ind-lab" : "ind-prak");
+    let typeClass = "ind-prak"; // По умолчанию желтый
+    if (l.type.includes("Лек")) typeClass = "ind-lek"; // Зеленый
+    if (l.type.includes("Лаб")) typeClass = "ind-lab"; // Красный
+    if (l.type.includes("Обяз")) typeClass = ""; // Без индикатора или серый
+
     return `
         <div class="lesson-card">
             <div class="indicator ${typeClass}"></div>
@@ -50,33 +74,51 @@ function renderCard(l) {
 
 function renderToday() {
     let now = new Date();
-    let day = now.getDay();
-    if (day === 0) { day = 1; weekOffset = 1; document.getElementById('today-title').innerText = "Завтра (Пн)"; }
-    else { document.getElementById('today-title').innerText = "Сегодня"; }
+    // Если воскресенье — прыгаем на понедельник
+    if (now.getDay() === 0) {
+        now.setDate(now.getDate() + 1);
+        document.getElementById('today-title').innerText = "Завтра (Пн)";
+    } else {
+        document.getElementById('today-title').innerText = "Сегодня";
+    }
     
-    const info = getWeekInfo(weekOffset);
+    const dateStr = getISODate(now);
     const list = document.getElementById('today-list');
     list.innerHTML = "";
     
-    const todayLessons = schedule.filter(s => s.day === day && (s.week === "both" || s.week === info.type));
-    todayLessons.forEach(l => list.innerHTML += renderCard(l));
-    document.getElementById('today-date-info').innerText = `${info.label}, ${now.toLocaleDateString('ru', {day:'numeric', month:'long'})}`;
+    document.getElementById('today-date-info').innerText = now.toLocaleDateString('ru', {day:'numeric', month:'long'});
+
+    const lessons = calendarData[dateStr] || [];
+    if (lessons.length === 0) {
+        list.innerHTML = "<p style='text-align:center; opacity:0.3; margin-top:50px;'>Пар нет или расписание не загружено</p>";
+    } else {
+        lessons.forEach(l => list.innerHTML += renderCard(l));
+    }
 }
 
 function renderWeek() {
-    const info = getWeekInfo(weekOffset);
-    document.getElementById('week-range').innerText = info.range;
-    document.getElementById('week-type-label').innerText = info.label;
+    let d = new Date();
+    // Находим Пн выбранной недели
+    d.setDate(d.getDate() - (d.getDay() === 0 ? 6 : d.getDay() - 1) + (currentOffset * 7));
+    
+    let start = new Date(d);
+    let end = new Date(d); end.setDate(d.getDate() + 6);
+    
+    document.getElementById('week-range').innerText = `${start.getDate()} ${start.toLocaleString('ru', {month:'short'})} — ${end.getDate()} ${end.toLocaleString('ru', {month:'short'})}`;
     
     const list = document.getElementById('week-list');
     list.innerHTML = "";
-    const days = ["", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница"];
-    
-    for (let i = 1; i <= 5; i++) {
-        const dayLessons = schedule.filter(s => s.day === i && (s.week === "both" || s.week === info.type));
-        if (dayLessons.length > 0) {
-            list.innerHTML += `<div style="margin:15px 0 10px 5px; font-size:12px; opacity:0.5; font-weight:600;">${days[i].toUpperCase()}</div>`;
-            dayLessons.forEach(l => list.innerHTML += renderCard(l));
+    const daysNames = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб"];
+
+    for (let i = 0; i < 6; i++) {
+        let currentDay = new Date(start);
+        currentDay.setDate(start.getDate() + i);
+        const dateStr = getISODate(currentDay);
+        const lessons = calendarData[dateStr] || [];
+
+        if (lessons.length > 0) {
+            list.innerHTML += `<div style="margin:15px 0 10px 5px; font-size:12px; opacity:0.5; font-weight:800; text-transform:uppercase;">${daysNames[i]} (${currentDay.getDate()} ${currentDay.toLocaleString('ru', {month:'short'})})</div>`;
+            lessons.forEach(l => list.innerHTML += renderCard(l));
         }
     }
 }
@@ -86,9 +128,17 @@ function switchTab(id, el) {
     document.querySelectorAll('.tab-item').forEach(i => i.classList.remove('active'));
     document.getElementById(id).classList.add('active');
     el.classList.add('active');
-    if (id === 'tab-today') renderToday(); else renderWeek();
+    if (id === 'tab-today') {
+        currentOffset = 0; 
+        renderToday();
+    } else {
+        renderWeek();
+    }
 }
 
-function changeWeek(dir) { weekOffset += dir; renderWeek(); }
+function changeWeek(dir) {
+    currentOffset += dir;
+    renderWeek();
+}
 
 window.onload = () => { renderToday(); };

@@ -107,6 +107,19 @@ header {
     padding-bottom: env(safe-area-inset-bottom);
 }
 
+.ind-prak {
+    background: #ffcc00;
+}
+/* Желтый */
+.ind-lek {
+    background: #4cd964;
+}
+/* Зеленый */
+.ind-lab {
+    background: #ff3b30;
+}
+/* Красный */
+
 .tab-item {
     flex: 1;
     text-align: center;
