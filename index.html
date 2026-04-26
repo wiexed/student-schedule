@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Расписание</title>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -10,17 +10,14 @@
     <div class="app-container">
         <header>
             <button id="prevWeek">❮</button>
-            <div class="header-center">
-                <h2 id="weekRange">Загрузка...</h2>
-            </div>
+            <h2 id="weekRange">Загрузка...</h2>
             <button id="nextWeek">❯</button>
         </header>
 
-        <main id="scheduleDisplay">
-        </main>
+        <main id="scheduleDisplay"></main>
 
         <nav class="bottom-nav">
-            <div class="nav-item active" onclick="location.reload()">
+            <div class="nav-item active" id="showTodayBtn">
                 <span class="icon">🏠</span>
                 <span>Сегодня</span>
             </div>
