@@ -10,61 +10,67 @@ body {
     background-color: var(--bg);
     color: var(--text);
     margin: 0;
-    padding: calc(20px + env(safe-area-inset-top)) 20px calc(100px + env(safe-area-inset-bottom)) 20px;
-    box-sizing: border-box;
-    min-height: 100vh;
+    padding: calc(10px + env(safe-area-inset-top)) 0 calc(90px + env(safe-area-inset-bottom)) 0;
+    overflow-x: hidden;
 }
 
 header {
-    margin-bottom: 25px;
+    padding: 20px;
 }
 
 h1 {
-    font-size: 28px;
+    font-size: 26px;
     margin: 0;
-    font-weight: 800;
 }
 
-/* Новая кнопка переключателя */
-.week-toggle {
-    display: inline-flex;
-    align-items: center;
+/* Лента дат */
+.date-picker {
+    display: flex;
+    overflow-x: auto;
+    padding: 15px 20px;
+    gap: 12px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+}
+
+    .date-picker::-webkit-scrollbar {
+        display: none;
+    }
+
+.date-item {
+    min-width: 55px;
+    height: 75px;
     background: var(--card-bg);
-    padding: 8px 16px;
-    border-radius: 12px;
-    margin-top: 12px;
-    border: 1px solid var(--accent);
-    cursor: pointer;
-    transition: 0.2s;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    scroll-snap-align: start;
+    border: 1px solid rgba(255,255,255,0.05);
+    transition: 0.3s;
 }
 
-    .week-toggle span {
-        color: var(--accent);
-        font-size: 14px;
-        font-weight: 700;
+    .date-item.active {
+        background: var(--accent);
+        color: #111;
+        font-weight: bold;
+        transform: scale(1.05);
     }
 
-    .week-toggle:active {
-        transform: scale(0.95);
+    .date-item span:first-child {
+        font-size: 12px;
+        opacity: 0.7;
+        text-transform: uppercase;
     }
 
-.tab-content {
-    display: none;
-}
-
-    .tab-content.active {
-        display: block;
-        animation: fadeIn 0.2s ease;
+    .date-item span:last-child {
+        font-size: 20px;
+        margin-top: 4px;
     }
 
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
+.lessons-container {
+    padding: 0 20px;
 }
 
 .card {
@@ -73,7 +79,6 @@ h1 {
     border-radius: 20px;
     padding: 18px;
     margin-bottom: 12px;
-    border: 1px solid rgba(255,255,255,0.05);
 }
 
 .tab-bar {
@@ -81,12 +86,12 @@ h1 {
     bottom: 0;
     left: 0;
     right: 0;
-    background: rgba(15, 15, 20, 0.9);
-    backdrop-filter: blur(20px);
+    background: rgba(15, 15, 20, 0.95);
     display: flex;
     justify-content: space-around;
-    padding: 12px 0 calc(12px + env(safe-area-inset-bottom)) 0;
+    padding: 10px 0 calc(10px + env(safe-area-inset-bottom)) 0;
     border-top: 1px solid rgba(255,255,255,0.1);
+    z-index: 1000;
 }
 
 .tab-item {
@@ -102,37 +107,29 @@ h1 {
         color: var(--accent);
     }
 
-    .tab-item .icon {
-        font-size: 20px;
-    }
-
     .tab-item label {
         font-size: 10px;
         margin-top: 4px;
     }
 
+.tab-content {
+    display: none;
+}
+
+    .tab-content.active {
+        display: block;
+    }
+
 input, select, button {
-    width: 100%;
+    width: 90%;
+    margin: 5% auto;
+    display: block;
     padding: 14px;
-    margin-bottom: 10px;
     border-radius: 12px;
     border: none;
-    font-size: 16px;
-}
-
-input, select {
-    background: rgba(255,255,255,0.1);
-    color: white;
-}
-
-button {
-    background: var(--accent);
-    color: #111;
-    font-weight: 700;
 }
 
 .reset-btn {
-    background: rgba(255,255,255,0.05);
+    background: none;
     color: #ff8181;
-    margin-top: 20px;
 }
