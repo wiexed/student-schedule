@@ -1,122 +1,134 @@
 ﻿:root {
     --bg: #0b0b0e;
-    --card-bg: #16161a;
+    --card: #16161a;
+    --accent: #5ba4ff;
     --text: #ffffff;
-    --accent-blue: #5ba4ff;
-    --type-lek: #4cd964; /* Зеленый для лекций */
-    --type-prak: #ffcc00; /* Желтый для практик */
-    --type-lab: #ff3b30; /* Красный для лаб */
-    --type-other: #8e8e93; /* Серый для остального */
+    --prak: #ffcc00;
+    --lek: #4cd964;
+    --lab: #ff3b30;
 }
 
 body {
     font-family: -apple-system, sans-serif;
-    background-color: var(--bg);
+    background: var(--bg);
     color: var(--text);
     margin: 0;
-    padding: 20px 15px 100px 15px;
+    padding-bottom: 100px;
 }
 
-/* Карточка пары в стиле "того" приложения */
-.card {
-    background: var(--card-bg);
+.main-header {
+    padding: 20px 15px;
+    background: var(--bg);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+#week-indicator {
+    color: #8e8e93;
+    font-size: 14px;
+}
+
+/* Лента календаря */
+.calendar-strip {
+    display: flex;
+    overflow-x: auto;
+    padding: 15px 0;
+    gap: 10px;
+}
+
+    .calendar-strip::-webkit-scrollbar {
+        display: none;
+    }
+
+.day-box {
+    min-width: 50px;
+    height: 70px;
+    background: var(--card);
     border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+}
+
+    .day-box span:first-child {
+        font-size: 11px;
+        opacity: 0.6;
+        margin-bottom: 5px;
+    }
+
+    .day-box.active {
+        background: var(--accent);
+        color: #000;
+        font-weight: bold;
+    }
+
+/* Карточка пары */
+.container {
+    padding: 0 15px;
+}
+
+.lesson-card {
+    background: var(--card);
+    border-radius: 14px;
     margin-bottom: 10px;
     display: flex;
     overflow: hidden;
-    position: relative;
+    animation: slideIn 0.3s ease;
 }
 
-/* Полоска типа пары слева */
-.type-indicator {
-    width: 4px;
+@keyframes slideIn {
+    from {
+        transform: translateY(10px);
+        opacity: 0;
+    }
 }
 
-.type-lek {
-    background: var(--type-lek);
+.indicator {
+    width: 5px;
 }
 
-.type-prak {
-    background: var(--type-prak);
+.type-Прак {
+    background: var(--prak);
 }
 
-.type-lab {
-    background: var(--type-lab);
+.type-Лек {
+    background: var(--lek);
 }
 
-.type-other {
-    background: var(--type-other);
+.type-Лаб {
+    background: var(--lab);
 }
 
-.card-content {
+.card-body {
     padding: 12px 15px;
     flex-grow: 1;
 }
 
-.lesson-top {
+.top-row {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    margin-bottom: 4px;
-}
-
-.time-text {
-    font-size: 13px;
-    font-weight: 600;
     color: #8e8e93;
-}
-
-.room-text {
     font-size: 13px;
     font-weight: 600;
-    color: var(--accent-blue);
 }
 
-.subject-text {
-    font-size: 17px;
-    font-weight: 600;
-    margin: 2px 0;
+.subject {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 5px 0;
 }
 
-.type-label {
-    font-size: 11px;
-    opacity: 0.6;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+.room {
+    color: var(--accent);
 }
-
-/* Навигация недели с датами */
-.week-header {
-    background: var(--card-bg);
-    border-radius: 12px;
-    padding: 15px;
-    margin-bottom: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.nav-arrow {
-    background: none;
-    border: none;
-    color: var(--accent-blue);
-    font-size: 20px;
-    padding: 10px;
-}
-
-.week-info {
-    text-align: center;
-}
-
-    .week-info h2 {
-        font-size: 16px;
-        margin: 0;
-    }
-
-    .week-info span {
-        font-size: 12px;
-        color: #8e8e93;
-    }
 
 /* Таб-бар */
 .tab-bar {
@@ -126,18 +138,56 @@ body {
     right: 0;
     background: #1c1c1e;
     display: flex;
-    padding-bottom: calc(10px + env(safe-area-inset-bottom));
+    padding: 10px 0 calc(10px + env(safe-area-inset-bottom));
 }
 
 .tab-item {
     flex: 1;
     text-align: center;
-    padding: 10px;
-    opacity: 0.5;
-    color: white;
+    opacity: 0.4;
+    color: #fff;
+    border: none;
+    background: none;
 }
 
     .tab-item.active {
         opacity: 1;
-        color: var(--accent-blue);
+        color: var(--accent);
     }
+
+/* Редактор */
+.edit-card {
+    background: var(--card);
+    padding: 15px;
+    border-radius: 15px;
+}
+
+input, select {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 10px;
+    background: #2c2c2e;
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    box-sizing: border-box;
+}
+
+.add-btn {
+    width: 100%;
+    padding: 15px;
+    background: var(--accent);
+    border: none;
+    border-radius: 10px;
+    font-weight: 700;
+}
+
+.reset-btn {
+    width: 100%;
+    margin-top: 20px;
+    background: none;
+    color: #ff3b30;
+    border: 1px solid #ff3b30;
+    padding: 10px;
+    border-radius: 10px;
+}

@@ -2,50 +2,54 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Расписание СДП</title>
+    <title>Моё Расписание</title>
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.json">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
 </head>
 <body>
 
-    <section id="tab-today" class="tab-content active">
-        <header><h1 id="today-title">Сегодня</h1></header>
-        <div id="today-list" class="lessons-container"></div>
-    </section>
-
-    <section id="tab-week" class="tab-content">
-        <header>
-            <div class="week-header">
-                <button class="nav-arrow" onclick="changeWeek(-1)">❮</button>
-                <div class="week-info">
-                    <h2 id="week-range">Загрузка...</h2>
-                    <span id="week-type-name">...</span>
-                </div>
-                <button class="nav-arrow" onclick="changeWeek(1)">❯</button>
+    <section id="tab-main" class="tab-content active">
+        <header class="main-header">
+            <div class="date-display">
+                <h1 id="selected-date-str">Сегодня</h1>
+                <span id="week-indicator">Расписание на день</span>
+            </div>
+            <div class="calendar-strip" id="calendar-strip">
             </div>
         </header>
-        <div id="week-schedule-container"></div>
+
+        <div id="lessons-list" class="container">
+        </div>
     </section>
 
-    <section id="tab-settings" class="tab-content">
-        <header><h1>Настройки</h1></header>
-        <div class="card">
-            <button onclick="resetToDefault()" style="background:#ff4757; color:white; border:none; padding:15px; border-radius:12px; width:100%; font-weight:700;">Сбросить всё</button>
+    <section id="tab-edit" class="tab-content">
+        <header><h1>Редактор</h1></header>
+        <div class="container">
+            <div class="edit-card">
+                <input type="text" id="edit-name" placeholder="Название предмета">
+                <div class="row">
+                    <input type="text" id="edit-time" placeholder="08:30-09:55">
+                    <input type="text" id="edit-room" placeholder="Каб. 307">
+                </div>
+                <select id="edit-type">
+                    <option value="Прак">Практическое занятие</option>
+                    <option value="Лек">Лекция</option>
+                    <option value="Лаб">Лабораторная</option>
+                </select>
+                <button class="add-btn" onclick="addNewLesson()">Добавить на этот день</button>
+            </div>
+            <button class="reset-btn" onclick="clearDay()">Очистить этот день</button>
         </div>
     </section>
 
     <nav class="tab-bar">
-        <div class="tab-item active" onclick="switchTab('tab-today', this)">
-            <span class="icon">🏠</span><label>Сегодня</label>
+        <div class="tab-item active" onclick="switchTab('tab-main', this)">
+            <span class="icon">📅</span><label>График</label>
         </div>
-        <div class="tab-item" onclick="switchTab('tab-week', this)">
-            <span class="icon">🗓</span><label>Неделя</label>
-        </div>
-        <div class="tab-item" onclick="switchTab('tab-settings', this)">
-            <span class="icon">⚙️</span><label>Опции</label>
+        <div class="tab-item" onclick="switchTab('tab-edit', this)">
+            <span class="icon">✏️</span><label>Правка</label>
         </div>
     </nav>
 

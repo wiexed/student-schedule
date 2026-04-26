@@ -1,85 +1,100 @@
-const defaultSchedule = [
-    // ПОНЕДЕЛЬНИК (Исправлен: Графика 1-я, Физра 5-я)
-    { day: "Понедельник", week: "both", subject: "Инженерная графика", type: "Прак", time: "08:30 — 09:55", room: "307" },
-    { day: "Понедельник", week: "both", subject: "Тестирование ПО", type: "Прак", time: "10:05 — 11:30", room: "206" },
-    { day: "Понедельник", week: "both", subject: "Физика", type: "Лек", time: "11:40 — 13:05", room: "315" },
-    { day: "Понедельник", week: "both", subject: "Математика", type: "Прак", time: "13:30 — 14:55", room: "219" },
-    { day: "Понедельник", week: "both", subject: "Физра", type: "Прак", time: "15:05 — 16:30", room: "с/з" },
+// Базовое расписание, чтобы не было пусто при первом запуске
+const initialData = {
+    // Формат: "ГГГГ-ММ-ДД": [массив пар]
+};
 
-    // ВТОРНИК
-    { day: "Вторник", week: "both", subject: "Иностранный язык", type: "Прак", time: "08:30 — 09:55", room: "312" },
-    { day: "Вторник", week: "num", subject: "Физика", type: "Прак", time: "10:05 — 11:30", room: "213" },
-    { day: "Вторник", week: "both", subject: "Математика", type: "Лек", time: "11:40 — 13:05", room: "221" },
-    { day: "Вторник", week: "both", subject: "История бел. гос-ти", type: "Лек", time: "13:30 — 14:55", room: "312" },
+let schedule = JSON.parse(localStorage.getItem('my_calendar_db')) || initialData;
+let selectedDate = new Date().toISOString().split('T')[0];
 
-    // СРЕДА
-    { day: "Среда", week: "both", subject: "Тестирование ПО", type: "Лек", time: "08:30 — 09:55", room: "315" },
-    { day: "Среда", week: "both", subject: "Математика", type: "Прак", time: "10:05 — 11:30", room: "218" },
-    { day: "Среда", week: "both", subject: "Физ. основы измерений", type: "Прак", time: "11:40 — 13:05", room: "305" },
-    { day: "Среда", week: "both", subject: "Физра", type: "Прак", time: "13:30 — 14:55", room: "с/з" }
-];
-
-let weekOffset = 0;
-
-function getWeekData(offset) {
-    const d = new Date();
-    d.setDate(d.getDate() - (d.getDay() - 1) + (offset * 7)); // Начало недели (Пн)
-    const end = new Date(d);
-    end.setDate(d.getDate() + 6); // Конец недели (Вс)
-    
-    const options = { day: 'numeric', month: 'short' };
-    const range = `${d.toLocaleDateString('ru', options)} — ${end.toLocaleDateString('ru', options)}`;
-    
-    // Тип недели
-    const startOfYear = new Date(d.getFullYear(), 0, 1);
-    const weekNum = Math.ceil((((d - startOfYear) / 86400000) + startOfYear.getDay() + 1) / 7);
-    const type = (weekNum % 2 === 0) ? "Знаменатель (четная)" : "Числитель (нечетная)";
-    
-    return { range, type, weekType: (weekNum % 2 === 0 ? "den" : "num") };
+function switchTab(id, el) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-item').forEach(i => i.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    el.classList.add('active');
 }
 
-function renderLessonCard(l) {
-    let typeClass = "type-other";
-    if (l.type.includes("Лек")) typeClass = "type-lek";
-    if (l.type.includes("Прак")) typeClass = "type-prak";
-    if (l.type.includes("Лаб")) typeClass = "type-lab";
-
-    return `
-        <div class="card">
-            <div class="type-indicator ${typeClass}"></div>
-            <div class="card-content">
-                <div class="lesson-top">
-                    <span class="time-text">${l.time}</span>
-                    <span class="room-text">${l.room}</span>
-                </div>
-                <div class="subject-text">${l.subject}</div>
-                <div class="type-label">${l.type}</div>
+function renderCalendar() {
+    const strip = document.getElementById('calendar-strip');
+    strip.innerHTML = '';
+    const daysArr = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
+    
+    for (let i = -7; i < 21; i++) {
+        let d = new Date();
+        d.setDate(d.getDate() + i);
+        let dateStr = d.toISOString().split('T')[0];
+        let isActive = dateStr === selectedDate;
+        
+        strip.innerHTML += `
+            <div class="day-box ${isActive ? 'active' : ''}" onclick="selectDate('${dateStr}')">
+                <span>${daysArr[d.getDay()]}</span>
+                <span>${d.getDate()}</span>
             </div>
-        </div>`;
+        `;
+    }
+    document.getElementById('selected-date-str').innerText = new Date(selectedDate).toLocaleDateString('ru', {day:'numeric', month:'long'});
 }
 
-function renderWeek() {
-    const data = getWeekData(weekOffset);
-    document.getElementById('week-range').innerText = data.range;
-    document.getElementById('week-type-name').innerText = data.type;
+function selectDate(date) {
+    selectedDate = date;
+    renderCalendar();
+    renderLessons();
+}
 
-    const days = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница"];
-    const container = document.getElementById('week-schedule-container');
-    container.innerHTML = "";
+function renderLessons() {
+    const list = document.getElementById('lessons-list');
+    list.innerHTML = '';
+    const lessons = schedule[selectedDate] || [];
+    
+    if (lessons.length === 0) {
+        list.innerHTML = `<p style="text-align:center; opacity:0.3; margin-top:50px;">На этот день ничего не записано</p>`;
+        return;
+    }
 
-    days.forEach(d => {
-        const lessons = defaultSchedule.filter(s => s.day === d && (s.week === "both" || s.week === data.weekType));
-        if (lessons.length > 0) {
-            container.innerHTML += `<div style="margin: 15px 5px 10px; font-size: 13px; color: #8e8e93; font-weight: 600;">${d.toUpperCase()}</div>`;
-            lessons.forEach(l => container.innerHTML += renderLessonCard(l));
-        }
+    lessons.sort((a,b) => a.time.localeCompare(b.time)).forEach((l, index) => {
+        list.innerHTML += `
+            <div class="lesson-card">
+                <div class="indicator type-${l.type}"></div>
+                <div class="card-body">
+                    <div class="top-row">
+                        <span>${l.time}</span>
+                        <span class="room">${l.room}</span>
+                    </div>
+                    <div class="subject">${l.subject}</div>
+                    <div style="font-size:11px; opacity:0.5">${l.type}</div>
+                </div>
+            </div>
+        `;
     });
 }
 
-function changeWeek(dir) {
-    weekOffset += dir;
-    renderWeek();
+function addNewLesson() {
+    const name = document.getElementById('edit-name').value;
+    const time = document.getElementById('edit-time').value;
+    const room = document.getElementById('edit-room').value;
+    const type = document.getElementById('edit-type').value;
+
+    if (!name || !time) return alert('Введи название и время');
+
+    if (!schedule[selectedDate]) schedule[selectedDate] = [];
+    schedule[selectedDate].push({ subject: name, time, room, type });
+    
+    save();
+    document.getElementById('edit-name').value = '';
+    switchTab('tab-main', document.querySelectorAll('.tab-item')[0]);
 }
 
-// При старте
-window.onload = () => { renderWeek(); };
+function clearDay() {
+    if (confirm('Очистить расписание на этот день?')) {
+        delete schedule[selectedDate];
+        save();
+    }
+}
+
+function save() {
+    localStorage.setItem('my_calendar_db', JSON.stringify(schedule));
+    renderLessons();
+}
+
+// Инициализация
+renderCalendar();
+renderLessons();
