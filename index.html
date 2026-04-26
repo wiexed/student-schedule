@@ -1,0 +1,50 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Мое Расписание</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/2693/2693507.png">
+</head>
+<body>
+
+    <h1>Мой День</h1>
+
+    <button onclick="toggleForm()" id="toggleBtn">➕ Добавить пару</button>
+
+    <div id="add-form" class="hidden">
+        <div class="card">
+            <h2>Новая пара</h2>
+            <input id="subject" placeholder="Предмет">
+            <select id="day">
+                <option value="Понедельник">Понедельник</option>
+                <option value="Вторник">Вторник</option>
+                <option value="Среда">Среда</option>
+                <option value="Четверг">Четверг</option>
+                <option value="Пятница">Пятница</option>
+                <option value="Суббота">Суббота</option>
+            </select>
+            <input id="time" placeholder="Время (напр. 10:00-11:30)">
+            <input id="room" placeholder="Аудитория">
+            <button onclick="addLesson()" style="background: #a6e3a1;">Сохранить</button>
+        </div>
+    </div>
+
+    <div id="today-section">
+        <h2>Сегодня</h2>
+        <div id="today"></div>
+    </div>
+
+    <hr style="border: 0.5px solid rgba(255,255,255,0.1); margin: 20px 0;">
+
+    <h2>Вся неделя</h2>
+    <div id="schedule"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
