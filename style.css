@@ -133,3 +133,32 @@ input, select, button {
     background: none;
     color: #ff8181;
 }
+
+.lesson-type {
+    display: inline-block;
+    background: rgba(116, 199, 236, 0.15); /* Цвет акцента, но прозрачный */
+    color: var(--accent);
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 800;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+}
+
+.lesson-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 5px;
+}
+
+.week-selector-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--card-bg);
+    border-radius: 15px;
+    padding: 5px;
+    margin-bottom: 15px;
+}

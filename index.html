@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Расписание</title>
+    <title>Расписание СДП</title>
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -12,51 +12,37 @@
 <body>
 
     <section id="tab-today" class="tab-content active">
-        <header>
-            <h1 id="month-name">Апрель</h1>
-            <div id="date-picker" class="date-picker"></div>
-        </header>
+        <header><h1 id="today-title">Сегодня</h1></header>
         <div id="today-list" class="lessons-container"></div>
     </section>
 
     <section id="tab-week" class="tab-content">
-        <header><h1>Вся неделя</h1></header>
-        <div id="full-schedule" class="lessons-container"></div>
+        <header>
+            <div class="week-selector-container">
+                <button class="nav-btn" onclick="changeWeek(-1)">❮</button>
+                <h2 id="week-display-title">Эта неделя</h2>
+                <button class="nav-btn" onclick="changeWeek(1)">❯</button>
+            </div>
+        </header>
+        <div id="week-schedule-container" class="lessons-container"></div>
     </section>
 
     <section id="tab-settings" class="tab-content">
         <header><h1>Настройки</h1></header>
         <div class="card">
-            <h3>Добавить пару</h3>
-            <input id="subject" placeholder="Предмет">
-            <select id="day">
-                <option value="Понедельник">Понедельник</option>
-                <option value="Вторник">Вторник</option>
-                <option value="Среда">Среда</option>
-                <option value="Четверг">Четверг</option>
-                <option value="Пятница">Пятница</option>
-            </select>
-            <select id="week-type">
-                <option value="both">Всегда</option>
-                <option value="num">Нечетная (новая)</option>
-                <option value="den">Четная (старая)</option>
-            </select>
-            <input id="time" placeholder="08:30-09:55">
-            <input id="room" placeholder="Аудитория">
-            <button onclick="addLesson()">Добавить</button>
+            <button onclick="resetToDefault()" style="background:#ff4757; color:white; border:none; padding:15px; border-radius:12px; width:100%; font-weight:700;">Сбросить всё</button>
         </div>
-        <button onclick="resetToDefault()" class="reset-btn">Сбросить расписание</button>
     </section>
 
     <nav class="tab-bar">
         <div class="tab-item active" onclick="switchTab('tab-today', this)">
-            <span class="icon">📅</span><label>График</label>
+            <span class="icon">🏠</span><label>Сегодня</label>
         </div>
         <div class="tab-item" onclick="switchTab('tab-week', this)">
             <span class="icon">🗓</span><label>Неделя</label>
         </div>
         <div class="tab-item" onclick="switchTab('tab-settings', this)">
-            <span class="icon">⚙️</span><label>Настройки</label>
+            <span class="icon">⚙️</span><label>Опции</label>
         </div>
     </nav>
 
