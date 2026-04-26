@@ -1,96 +1,90 @@
-// База данных со всех твоих скриншотов
-const defaultSchedule = [
-    // ПОНЕДЕЛЬНИК
-    { day: "Понедельник", week: "both", subject: "Инженерная графика", time: "08:30-09:55", room: "307" },
-    { day: "Понедельник", week: "both", subject: "Тестирование ПО", time: "10:05-11:30", room: "206" },
-    { day: "Понедельник", week: "both", subject: "Физика (лек)", time: "11:40-13:05", room: "315" },
-    { day: "Понедельник", week: "both", subject: "Математика", time: "13:30-14:55", room: "219" },
-    
-    // ВТОРНИК
-    { day: "Вторник", week: "both", subject: "Иностранный язык", time: "08:30-09:55", room: "312" },
-    { day: "Вторник", week: "num", subject: "Физика", time: "10:05-11:30", room: "213" }, // числитель
-    { day: "Вторник", week: "both", subject: "Математика (лек)", time: "11:40-13:05", room: "221" },
-    { day: "Вторник", week: "both", subject: "История бел. государственности", time: "13:30-14:55", room: "312" },
-    
-    // СРЕДА
-    { day: "Среда", week: "both", subject: "Тестирование ПО (лек)", time: "08:30-09:55", room: "315" },
-    { day: "Среда", week: "both", subject: "Математика", time: "10:05-11:30", room: "218" },
-    { day: "Среда", week: "both", subject: "Физ. основы измерений", time: "11:40-13:05", room: "305" },
-    { day: "Среда", week: "den", subject: "Физ. воспитание", time: "13:30-14:55", room: "с/з" }, // знаменатель
-    
-    // ЧЕТВЕРГ
-    { day: "Четверг", week: "both", subject: "Физ. основы измерений", time: "08:30-09:55", room: "305" },
-    { day: "Четверг", week: "both", subject: "Физика", time: "10:05-11:30", room: "218" },
-    { day: "Четверг", week: "both", subject: "Физика (лек)", time: "11:40-13:05", room: "221" },
-    { day: "Четверг", week: "both", subject: "Информ. час", time: "13:15-14:15", room: "307" },
-    
-    // ПЯТНИЦА
-    { day: "Пятница", week: "num", subject: "Основы права (лек)", time: "08:30-09:55", room: "221" },
-    { day: "Пятница", week: "both", subject: "Физ. воспитание", time: "10:05-11:30", room: "с/з" },
-    { day: "Пятница", week: "den", subject: "Основы права", time: "11:40-13:05", room: "312" }
-];
+let schedule = JSON.parse(localStorage.getItem("schedule")) || []; // Твоя база данных останется здесь
 
-let schedule = JSON.parse(localStorage.getItem("schedule")) || defaultSchedule;
-const days = ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"];
-
-// Функция определения типа недели (Числитель/Знаменатель)
-function getWeekType() {
-    const now = new Date();
-    const oneJan = new Date(now.getFullYear(), 0, 1);
-    const numberOfDays = Math.floor((now - oneJan) / (24 * 60 * 60 * 1000));
-    const weekNum = Math.ceil((numberOfDays + oneJan.getDay() + 1) / 7);
-    return (weekNum % 2 === 0) ? "den" : "num"; // Четная - знаменатель, нечетная - числитель
+function switchTab(tabId, el) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-item').forEach(i => i.classList.remove('active'));
+    
+    document.getElementById(tabId).classList.add('active');
+    el.classList.add('active');
+    render();
 }
 
-let currentWeekView = getWeekType();
+function getWeekType() {
+    const now = new Date();
+    const start = new Date(now.getFullYear(), 0, 1);
+    const diff = Math.floor((now - start) / 86400000);
+    const weekNum = Math.ceil((diff + start.getDay() + 1) / 7);
+    return (weekNum % 2 === 0) ? "den" : "num";
+}
 
 function render() {
+    const days = ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"];
     const now = new Date();
     const todayName = days[now.getDay()];
-    const todayDiv = document.getElementById("today");
-    const scheduleDiv = document.getElementById("schedule");
+    const weekType = getWeekType();
 
-    // Выводим заголовок текущей недели
-    const weekText = currentWeekView === "num" ? "Числитель (нечет)" : "Знаменатель (чет)";
-    todayDiv.innerHTML = `<p style="color:#74c7ec; font-size:14px; margin-bottom:10px;">Сейчас: ${weekText}</p>`;
+    document.getElementById('week-type-display').innerText = weekType === 'num' ? 'Числитель (нечет)' : 'Знаменатель (чет)';
+    document.getElementById('current-day-name').innerText = todayName;
 
-    // Фильтруем пары для "Сегодня" с учетом недели
-    const todayLessons = schedule.filter(s => s.day === todayName && (s.week === "both" || s.week === currentWeekView));
-    
+    // Рендер вкладки СЕГОДНЯ
+    const todayList = document.getElementById('today-list');
+    todayList.innerHTML = "";
+    const todayLessons = schedule.filter(s => s.day === todayName && (s.week === "both" || s.week === weekType));
+
     if (todayLessons.length === 0) {
-        todayDiv.innerHTML += "<p style='opacity:0.5'>Пар нет 🥳</p>";
+        todayList.innerHTML = "<p style='text-align:center; opacity:0.5; margin-top:50px;'>Сегодня пар нет 🙌</p>";
     } else {
-        todayLessons.forEach((lesson) => {
-            const timer = getTimerStatus(lesson.time);
-            todayDiv.innerHTML += `
-                <div class="card ${timer.active ? 'active-lesson' : ''}">
-                    <b>${lesson.subject}</b><br>
-                    ${lesson.time} | ауд. ${lesson.room}
-                    ${timer.html}
+        todayLessons.forEach(l => {
+            todayList.innerHTML += `
+                <div class="card">
+                    <div class="lesson-time">🕒 ${l.time}</div>
+                    <div class="lesson-subject">${l.subject}</div>
+                    <div class="lesson-room">📍 Аудитория: ${l.room}</div>
                 </div>`;
         });
     }
 
-    // Вся неделя
-    scheduleDiv.innerHTML = "";
-    schedule.forEach((lesson, index) => {
-        const typeLabel = lesson.week === "num" ? " (Чис.)" : (lesson.week === "den" ? " (Знам.)" : "");
-        scheduleDiv.innerHTML += `
-            <div class="card">
-                <b>${lesson.day}${typeLabel} — ${lesson.subject}</b><br>
-                ${lesson.time} | ауд. ${lesson.room}
-                <button class="delete-btn" onclick="deleteLesson(${index})">✕</button>
-            </div>`;
+    // Рендер вкладки НЕДЕЛЯ
+    const fullList = document.getElementById('full-schedule');
+    fullList.innerHTML = "";
+    ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница"].forEach(d => {
+        const dayLessons = schedule.filter(s => s.day === d);
+        if (dayLessons.length > 0) {
+            fullList.innerHTML += `<h2 style="font-size:16px; margin:20px 0 10px 5px; opacity:0.6">${d}</h2>`;
+            dayLessons.forEach((l, idx) => {
+                fullList.innerHTML += `
+                    <div class="card" style="padding: 12px;">
+                        <span style="font-size:12px; color:var(--accent)">${l.week === 'num' ? '[Чис]' : l.week === 'den' ? '[Знам]' : ''}</span>
+                        <div style="display:flex; justify-content:space-between;">
+                            <b>${l.subject}</b>
+                            <span onclick="deleteLesson(${idx})" style="color:red; font-size:12px;">Удалить</span>
+                        </div>
+                        <div style="font-size:13px; opacity:0.7">${l.time} | каб. ${l.room}</div>
+                    </div>`;
+            });
+        }
     });
 }
 
-// ... (функции addLesson, deleteLesson, toggleForm, getTimerStatus оставляем такими же) ...
-
-// Добавляем в конец app.js возможность переключения недели кликом на заголовок "Сегодня"
-document.getElementById("today-section").onclick = () => {
-    currentWeekView = (currentWeekView === "num" ? "den" : "num");
+// Функции addLesson и deleteLesson остаются как были, но добавь в addLesson поле weekType
+function addLesson() {
+    const lesson = {
+        subject: document.getElementById('subject').value,
+        day: document.getElementById('day').value,
+        week: document.getElementById('week-type').value,
+        time: document.getElementById('time').value,
+        room: document.getElementById('room').value
+    };
+    schedule.push(lesson);
+    localStorage.setItem("schedule", JSON.stringify(schedule));
     render();
-};
+    alert("Добавлено!");
+}
 
-if ('serviceWorker' in navigator) { navigator.serviceWorker.register('./sw.js'); }
+function deleteLesson(index) {
+    schedule.splice(index, 1);
+    localStorage.setItem("schedule", JSON.stringify(schedule));
+    render();
+}
+
 render();

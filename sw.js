@@ -1,4 +1,4 @@
-const CACHE = "schedule-v2"; // Меняй версию здесь для обновления у всех
+const CACHE = "schedule-v1"; // Меняй версию здесь для обновления у всех
 const ASSETS = [
   "./",
   "./index.html",

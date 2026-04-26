@@ -2,25 +2,32 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Расписание</title>
+    <title>Расписание PRO</title>
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.json">
-
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0, viewport-fit=cover">
-
     <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/2693/2693507.png">
 </head>
 <body>
 
-    <h1>Мой День</h1>
+    <section id="tab-today" class="tab-content active">
+        <header>
+            <h1 id="current-day-name">Сегодня</h1>
+            <p id="week-type-display" class="week-badge">Числитель</p>
+        </header>
+        <div id="today-list" class="lessons-container"></div>
+    </section>
 
-    <button onclick="toggleForm()" id="toggleBtn">➕ Добавить пару</button>
+    <section id="tab-week" class="tab-content">
+        <header><h1>Вся неделя</h1></header>
+        <div id="full-schedule" class="lessons-container"></div>
+    </section>
 
-    <div id="add-form" class="hidden">
-        <div class="card">
-            <h2>Новая пара</h2>
+    <section id="tab-settings" class="tab-content">
+        <header><h1>Управление</h1></header>
+        <div class="card add-card">
             <input id="subject" placeholder="Предмет">
             <select id="day">
                 <option value="Понедельник">Понедельник</option>
@@ -28,23 +35,29 @@
                 <option value="Среда">Среда</option>
                 <option value="Четверг">Четверг</option>
                 <option value="Пятница">Пятница</option>
-                <option value="Суббота">Суббота</option>
             </select>
-            <input id="time" placeholder="Время (напр. 08:30-10:00)">
+            <select id="week-type">
+                <option value="both">Каждая неделя</option>
+                <option value="num">Числитель (нечет)</option>
+                <option value="den">Знаменатель (чет)</option>
+            </select>
+            <input id="time" placeholder="08:30-10:00">
             <input id="room" placeholder="Аудитория">
-            <button onclick="addLesson()" style="background: #a6e3a1;">Сохранить</button>
+            <button onclick="addLesson()">Добавить пару</button>
         </div>
-    </div>
+    </section>
 
-    <div id="today-section">
-        <h2>Сегодня</h2>
-        <div id="today"></div>
-    </div>
-
-    <hr style="border: 0.5px solid rgba(255,255,255,0.1); margin: 20px 0;">
-
-    <h2>Вся неделя</h2>
-    <div id="schedule"></div>
+    <nav class="tab-bar">
+        <div class="tab-item active" onclick="switchTab('tab-today', this)">
+            <span>📅</span><label>Сегодня</label>
+        </div>
+        <div class="tab-item" onclick="switchTab('tab-week', this)">
+            <span>🗓</span><label>Неделя</label>
+        </div>
+        <div class="tab-item" onclick="switchTab('tab-settings', this)">
+            <span>⚙️</span><label>Настройки</label>
+        </div>
+    </nav>
 
     <script src="app.js"></script>
 </body>
