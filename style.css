@@ -3,9 +3,9 @@
     --card: #16161a;
     --accent: #5ba4ff;
     --text: #ffffff;
-    --prak: #ffcc00;
-    --lek: #4cd964;
-    --lab: #ff3b30;
+    --prak: #ffcc00; /* Желтый */
+    --lek: #4cd964; /* Зеленый */
+    --lab: #ff3b30; /* Красный */
 }
 
 body {
@@ -13,7 +13,7 @@ body {
     background: var(--bg);
     color: var(--text);
     margin: 0;
-    padding: 20px 0 100px 0;
+    padding: calc(20px + env(safe-area-inset-top)) 0 100px 0;
 }
 
 header {
@@ -24,7 +24,6 @@ header {
     padding: 0 15px;
 }
 
-/* Карточка пары */
 .lesson-card {
     background: var(--card);
     border-radius: 12px;
@@ -78,13 +77,12 @@ header {
     text-transform: uppercase;
 }
 
-/* Навигация недели */
 .week-nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
     background: var(--card);
-    padding: 15px;
+    padding: 12px;
     border-radius: 12px;
     margin: 0 15px 20px 15px;
 }
@@ -93,10 +91,10 @@ header {
         background: none;
         border: none;
         color: var(--accent);
-        font-size: 20px;
+        font-size: 22px;
+        padding: 0 10px;
     }
 
-/* Таб-бар */
 .tab-bar {
     position: fixed;
     bottom: 0;
@@ -105,20 +103,8 @@ header {
     background: #1c1c1e;
     display: flex;
     padding-bottom: env(safe-area-inset-bottom);
+    border-top: 1px solid rgba(255,255,255,0.05);
 }
-
-.ind-prak {
-    background: #ffcc00;
-}
-/* Желтый */
-.ind-lek {
-    background: #4cd964;
-}
-/* Зеленый */
-.ind-lab {
-    background: #ff3b30;
-}
-/* Красный */
 
 .tab-item {
     flex: 1;
@@ -145,4 +131,15 @@ header {
 
     .tab-content.active {
         display: block;
+        animation: fadeIn 0.2s ease;
     }
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}

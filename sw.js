@@ -1,4 +1,4 @@
-const CACHE_NAME = "schedule-v76";
+const CACHE_NAME = "schedule-v45";
 const ASSETS = ["./", "./index.html", "./style.css", "./app.js", "./manifest.json"];
 
 self.addEventListener("install", (e) => {
