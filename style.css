@@ -1,164 +1,143 @@
 ﻿:root {
-    --bg: #0f0f14;
-    --card-bg: rgba(255, 255, 255, 0.07);
-    --accent: #74c7ec;
+    --bg: #0b0b0e;
+    --card-bg: #16161a;
     --text: #ffffff;
+    --accent-blue: #5ba4ff;
+    --type-lek: #4cd964; /* Зеленый для лекций */
+    --type-prak: #ffcc00; /* Желтый для практик */
+    --type-lab: #ff3b30; /* Красный для лаб */
+    --type-other: #8e8e93; /* Серый для остального */
 }
 
 body {
-    font-family: -apple-system, system-ui, sans-serif;
+    font-family: -apple-system, sans-serif;
     background-color: var(--bg);
     color: var(--text);
     margin: 0;
-    padding: calc(10px + env(safe-area-inset-top)) 0 calc(90px + env(safe-area-inset-bottom)) 0;
-    overflow-x: hidden;
+    padding: 20px 15px 100px 15px;
 }
 
-header {
-    padding: 20px;
-}
-
-h1 {
-    font-size: 26px;
-    margin: 0;
-}
-
-/* Лента дат */
-.date-picker {
-    display: flex;
-    overflow-x: auto;
-    padding: 15px 20px;
-    gap: 12px;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-}
-
-    .date-picker::-webkit-scrollbar {
-        display: none;
-    }
-
-.date-item {
-    min-width: 55px;
-    height: 75px;
-    background: var(--card-bg);
-    border-radius: 16px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    scroll-snap-align: start;
-    border: 1px solid rgba(255,255,255,0.05);
-    transition: 0.3s;
-}
-
-    .date-item.active {
-        background: var(--accent);
-        color: #111;
-        font-weight: bold;
-        transform: scale(1.05);
-    }
-
-    .date-item span:first-child {
-        font-size: 12px;
-        opacity: 0.7;
-        text-transform: uppercase;
-    }
-
-    .date-item span:last-child {
-        font-size: 20px;
-        margin-top: 4px;
-    }
-
-.lessons-container {
-    padding: 0 20px;
-}
-
+/* Карточка пары в стиле "того" приложения */
 .card {
     background: var(--card-bg);
-    backdrop-filter: blur(15px);
-    border-radius: 20px;
-    padding: 18px;
-    margin-bottom: 12px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    display: flex;
+    overflow: hidden;
+    position: relative;
 }
 
+/* Полоска типа пары слева */
+.type-indicator {
+    width: 4px;
+}
+
+.type-lek {
+    background: var(--type-lek);
+}
+
+.type-prak {
+    background: var(--type-prak);
+}
+
+.type-lab {
+    background: var(--type-lab);
+}
+
+.type-other {
+    background: var(--type-other);
+}
+
+.card-content {
+    padding: 12px 15px;
+    flex-grow: 1;
+}
+
+.lesson-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+}
+
+.time-text {
+    font-size: 13px;
+    font-weight: 600;
+    color: #8e8e93;
+}
+
+.room-text {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent-blue);
+}
+
+.subject-text {
+    font-size: 17px;
+    font-weight: 600;
+    margin: 2px 0;
+}
+
+.type-label {
+    font-size: 11px;
+    opacity: 0.6;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Навигация недели с датами */
+.week-header {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-arrow {
+    background: none;
+    border: none;
+    color: var(--accent-blue);
+    font-size: 20px;
+    padding: 10px;
+}
+
+.week-info {
+    text-align: center;
+}
+
+    .week-info h2 {
+        font-size: 16px;
+        margin: 0;
+    }
+
+    .week-info span {
+        font-size: 12px;
+        color: #8e8e93;
+    }
+
+/* Таб-бар */
 .tab-bar {
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
-    background: rgba(15, 15, 20, 0.95);
+    background: #1c1c1e;
     display: flex;
-    justify-content: space-around;
-    padding: 10px 0 calc(10px + env(safe-area-inset-bottom)) 0;
-    border-top: 1px solid rgba(255,255,255,0.1);
-    z-index: 1000;
+    padding-bottom: calc(10px + env(safe-area-inset-bottom));
 }
 
 .tab-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    opacity: 0.4;
+    flex: 1;
+    text-align: center;
+    padding: 10px;
+    opacity: 0.5;
     color: white;
 }
 
     .tab-item.active {
         opacity: 1;
-        color: var(--accent);
+        color: var(--accent-blue);
     }
-
-    .tab-item label {
-        font-size: 10px;
-        margin-top: 4px;
-    }
-
-.tab-content {
-    display: none;
-}
-
-    .tab-content.active {
-        display: block;
-    }
-
-input, select, button {
-    width: 90%;
-    margin: 5% auto;
-    display: block;
-    padding: 14px;
-    border-radius: 12px;
-    border: none;
-}
-
-.reset-btn {
-    background: none;
-    color: #ff8181;
-}
-
-.lesson-type {
-    display: inline-block;
-    background: rgba(116, 199, 236, 0.15); /* Цвет акцента, но прозрачный */
-    color: var(--accent);
-    padding: 2px 8px;
-    border-radius: 6px;
-    font-size: 11px;
-    font-weight: 800;
-    margin-bottom: 8px;
-    text-transform: uppercase;
-}
-
-.lesson-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 5px;
-}
-
-.week-selector-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: var(--card-bg);
-    border-radius: 15px;
-    padding: 5px;
-    margin-bottom: 15px;
-}

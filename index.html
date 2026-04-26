@@ -18,13 +18,16 @@
 
     <section id="tab-week" class="tab-content">
         <header>
-            <div class="week-selector-container">
-                <button class="nav-btn" onclick="changeWeek(-1)">❮</button>
-                <h2 id="week-display-title">Эта неделя</h2>
-                <button class="nav-btn" onclick="changeWeek(1)">❯</button>
+            <div class="week-header">
+                <button class="nav-arrow" onclick="changeWeek(-1)">❮</button>
+                <div class="week-info">
+                    <h2 id="week-range">Загрузка...</h2>
+                    <span id="week-type-name">...</span>
+                </div>
+                <button class="nav-arrow" onclick="changeWeek(1)">❯</button>
             </div>
         </header>
-        <div id="week-schedule-container" class="lessons-container"></div>
+        <div id="week-schedule-container"></div>
     </section>
 
     <section id="tab-settings" class="tab-content">
